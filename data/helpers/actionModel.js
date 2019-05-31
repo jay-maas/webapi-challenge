@@ -2,8 +2,12 @@ const db = require('../dbConfig.js');
 const mappers = require('./mappers');
 
 module.exports = {
-
-  get: function(id) {
+  
+  get: function() {
+    return db('actions')
+  },
+  
+  getById: function(id) {
     let query = db('actions');
 
     if (id) {
@@ -30,7 +34,7 @@ module.exports = {
       .update(changes)
       .then(count => (count > 0 ? this.get(id) : null));
   },
-  
+
   remove: function(id) {
     return db('actions')
       .where('id', id)
