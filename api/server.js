@@ -1,4 +1,5 @@
 const express = require('express') 
+const cors = require('cors')
 const timestamp = require('time-stamp')
 
 const actionsRouter = require('./routes/actionsRouter.js')
@@ -6,6 +7,7 @@ const projectsRouter = require('./routes/projectsRouter.js')
 
 const server = express()
 
+server.use(cors())
 server.use(logger)
 server.use('/api/actions', actionsRouter)
 server.use('/api/projects', projectsRouter)
