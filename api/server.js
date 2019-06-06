@@ -14,18 +14,25 @@ server.use('/api/projects', projectsRouter)
 
 server.get('/', (req, res) => {
     res.send(`
-    <div style="display: flex; align-items: center;">
-        <p style="margin: 0;">This project was deployed by:</p>
-        <h2 style="margin: 0;"> ${process.env.DEPLOYER}</h2>
-    </div>
+    <p>Deployed by: <strong>${process.env.DEPLOYER}</strong></p>
     <p>Message of the Day: ${process.env.MOTD}</p>
     <p>Extra: ${process.env.OTHER_STUFF}</p>
+    <script>
+        const body = document.querySelector("body").style
+        // body.backgroundColor = "red"
+        body.display = "flex"
+        body.justifyContent = "center"
+        body.flexDirection = "column"
+        body.width = "100vw"
+        body.height = "100vh"
+        body.textAlign = "center"
+    </script>
     `)
 })
 
 function logger(req, res, next) {
     console.log(`A ${req.method} request to ${req.url} at ${timestamp.utc('HH:mm:ss on MM/DD/YYYY')}`)
     next()
-  }
+}
   
   module.exports = server
