@@ -4,7 +4,7 @@ import { checkServer } from './actions'
 import { Route } from 'react-router-dom'
 import { Navigation } from './components'
 import UserHelper from './components/UserHelper';
-import { Projects } from './pages'
+import { Projects, Project } from './pages'
 
 class App extends React.Component {
   componentDidMount() {
@@ -20,6 +20,7 @@ class App extends React.Component {
         <div style={{marginTop: "10vh", width: "100vw", height: "85vh", display: "flex", justifyContent: "center", alignItems: "center"}}>
 
         <Route exact path ="/" component={Projects}/>
+        <Route exact path ="/project/:id" component={Project} />
           
         </div>
       </>

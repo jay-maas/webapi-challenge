@@ -30,6 +30,23 @@ router.get('/:id', validateProjectId, async (req, res) => {
     }
 })
 
+router.get('/:id/actions', validateProjectId, async (req, res) => {
+    try {
+        const project = await Projects.getById(req.project.id)
+        const actions = await Projects.getActionsById(req.project.id)
+        const projectWithActions = {
+            ...project,
+            actions: actions
+        }
+        res.status(201).json(projectWithActions)
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({
+            error: "Error retrieving the project."
+        })
+    }
+})
+
 router.post('/', validateProject, async (req, res) => {
     try {
         const newProject = await Projects.insert(req.projectValid)

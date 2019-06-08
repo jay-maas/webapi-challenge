@@ -39,7 +39,7 @@ export const getProjects = () => dispatch => {
             dispatch({
                 type: GET_PROJECTS_SUCCESS,
                 payload: {
-                    message: "Server is on and ready for requests...",
+                    message: "Projects where succesfully retrieved",
                     projects: res.data
                 }
             })
@@ -48,7 +48,35 @@ export const getProjects = () => dispatch => {
             console.log(err)
             dispatch({
                 type: GET_PROJECTS_ERROR,
-                payload: "The server is not awake/functioning."
+                payload: "Error retrieving the projects from the server."
+            })
+        })
+}
+
+export const GET_PROJECT_START = 'GET_PROJECT_START'
+export const GET_PROJECT_SUCCESS = 'GET_PROJECT_SUCCESS'
+export const GET_PROJECT_ERROR = 'GET_PROJECT_ERROR'
+
+export const getProject = (projectId) => dispatch => {
+    dispatch({ type: GET_PROJECT_START })
+
+    axios
+        .get(`http://localhost:4000/api/projects/${projectId}`)
+        .then(res => {
+            console.log(res)
+            dispatch({
+                type: GET_PROJECT_SUCCESS,
+                payload: {
+                    message: "Project data succesfully retrieved",
+                    project: res.data
+                }
+            })
+        })
+        .catch(err => {
+            console.log(err)
+            dispatch({
+                type: GET_PROJECT_ERROR,
+                payload: "Error retrieving the data from the server."
             })
         })
 }

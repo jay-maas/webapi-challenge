@@ -4,6 +4,7 @@ const mappers = require('./mappers');
 module.exports = {
   get,
   getById,
+  getActionsById,
   insert,
   update,
   remove,
@@ -38,6 +39,13 @@ function getById(id) {
   return query.then(projects => {
     return projects.map(project => mappers.projectToBody(project));
   });
+}
+
+function getActionsById(projectId) {
+  return db('actions')
+    .join('projects', 'actions.projects_id', 'projects.id')
+    .select('actions.name', 'actions.description', 'actions.id')
+    .where({  projects_id: projectId })
 }
 
 function insert(project) {

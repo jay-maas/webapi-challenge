@@ -10,10 +10,12 @@ class Projects extends React.Component {
     render(){
         return(
             <>
-                Projects
-                {this.props.projects && this.props.projects.map(project =>{
-                    return <Project key={project.id} project={project} />
-                })}
+                <div style={{display: "flex", flexDirection: "column", textAlign: "center"}}>
+                    <h1>Projects</h1>
+                    {this.props.projects && this.props.projects.map(project =>{
+                        return <Project key={project.id} project={project} />
+                    })}
+                </div>
             </>
         )
     }
