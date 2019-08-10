@@ -19,21 +19,25 @@ router.get('/', async (req, res) => {
     }
 })
 
-router.get('/:id', validateProjectId, async (req, res) => {
+router.get('/:id/:action_id', validateProjectId, validateActionId, async (req, res) => {
     try {
-        const actions = await Actions.getById(req.project.id)
-        res.status(201).json(actions)
+        const action = await Actions.getById(req.action.id)
+        res.status(201).json(action)
     } catch (error) {
         console.log(error)
         res.status(500).json({
-            error: "Error retrieving the actions."
+            error: "Error retrieving the action."
         })
     }
 })
 
-router.post('/:id/actions', validateProjectId, validateAction, async (req, res) => {
+router.post('/:id', validateProjectId, validateAction, async (req, res) => {
     try {
-        const newAction = await Projects.insert(req.projectValid)
+        action = {
+            ...req.actionValid,
+            project_id: req.project.id
+        }
+        const newAction = await Actions.insert(action)
         res.status(201).json(newAction)
     } catch (error) {
         console.log(error)
@@ -43,26 +47,30 @@ router.post('/:id/actions', validateProjectId, validateAction, async (req, res) 
     }
 })
 
-router.put('/:id', validateActionId,  validateAction, async (req, res) => {
+router.put('/:id/:action_id', validateProjectId, validateActionId,  validateAction, async (req, res) => {
     try {
-        updated = await Projects.update(req.project.id, req.projectValid)
+        action = {
+            ...req.actionValid,
+            project_id: req.project.id
+        }
+        updated = await Actions.update(req.action.id, action)
         res.status(200).json(updated)
     } catch (error) {
         console.log(error)
         res.status(500).json({
-            error: "Error updating project"
+            error: "Error updating action"
         })
     }
 })
 
-router.delete('/:action_id', validateProjectId, async (req, res) => {
+router.delete('/:action_id', validateActionId, async (req, res) => {
     try {
-        deleted = await Projects.remove(req.project.id)
+        deleted = await Actions.remove(req.action.id)
         res.status(200).json(deleted)
     } catch (error) {
         console.log(error)
         res.status(500).json({
-            error: "Error deleting project"
+            error: "Error deleting action"
         })
     }
 })
@@ -81,12 +89,15 @@ async function validateProjectId(req, res, next) {
 }
 
 async function validateActionId(req, res, next) {
-    const action = await Actions.get(req.params.action_id)
-    console.log(action)
-    if (action) {
-        req.action = action
-        next()
-    } else {
+    try {
+        const action = await Actions.getById(req.params.action_id)
+        console.log(action)
+        if (action) {
+            req.action = action
+            next()
+        } 
+    } catch (error) {
+        console.log(error) 
         res.status(404).json({
             error: "Could not find an action by that ID"
         })
@@ -106,7 +117,6 @@ function validateAction(req, res, next) {
                 errorMessage: 'Missing required notes and/or description. This schema requires both. Please do not submit any other key:values in this post request!'
             })
         }
-    
     } else {
         res.status(400).json({
             errorMessage: 'Missing action data.'
@@ -122,6 +132,5 @@ function isEmpty(obj) {
     }
     return true
 }
-
 
 module.exports = router
